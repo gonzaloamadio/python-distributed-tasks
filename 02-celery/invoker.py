@@ -2,12 +2,13 @@ import time
 from tasks import add, data_extractor
 from celery.result import AsyncResult
 
-# This will create the producer, invoke the celery task
-result = add.delay(1, 2)
 
 ###################################
 # Sum function
 ###################################
+
+# This will create the producer, invoke the celery task
+result = add.delay(1, 2)
 
 print(result) # this will print the task id
 

@@ -1,12 +1,12 @@
 # Run
 
-*First terminal*
+- *First terminal*
 
 If you do not have redis running, run it. `redis-server`
 
 https://redis.io/docs/getting-started/installation/install-redis-on-mac-os/
 
-*Second terminal*
+- *Second terminal*
 
 $ celery -A tasks worker --loglevel=info
 
@@ -15,7 +15,7 @@ Where `tasks` is the name we inserted as first argument of Celery constructor.
 This is the consumer or worker. If we want to run 10 workers, we should open 10 terminals
 and execute this same command in all of them
 
-*Third terminal*
+- *Third terminal*
 
 $ python invoker.py
 
@@ -66,7 +66,7 @@ Example Run, take not that there is no need to invoke the python itself. Beat wi
 [2022-09-20 13:53:34,811: INFO/ForkPoolWorker-4] Task tasks.send_mail_from_queue[73ac2744-760e-4cb2-b664-bef8c2d984ad] succeeded in 0.0028140060000012568s: None
 ```
 
-Second terminal
+Second terminal. We do not have anythin else than the periodic task. Beat will derive when to send events from the timedelta defined.
 
 ```
 ❯ celery -A tasks beat --loglevel=info

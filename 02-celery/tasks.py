@@ -12,6 +12,7 @@ from celery.task.schedules import crontab
 # Can use redis itself
 # And others...
 # If we do not explicitely specify a backend, celery does not return result, it is just a queue.
+# So for example without backend, result will be None in `result = add.delay(1,2)
 app = Celery('tasks', backend='redis://localhost:6379/0', broker='redis://localhost:6379/0')
 
 ########################################################
@@ -23,6 +24,9 @@ def add(x, y):
 	print('{} + {} = {}'.format(x, y, total))
 	# Simulate long running task
 	time.sleep(5)
+
+	# this will return an UUID, the resultant ID of the celery task.
+	# Then we need to extract the value from here
 	return total
 
 ########################################################
@@ -42,6 +46,10 @@ def backoff(attempts):
 
 # bind: Make the first arg of the function, the task itself.
 # soft time limit: If task does not end in the amount of seconds, it will raise the soft limit Exception.
+# So having bind will make `self` the first arg of the function, and that will make us able
+# to call functions derived from the task itslef. Name, status, functions, etc.
+# Code is not tweaked to handle soft_time_limit,
+#      `try: return do_work() except SoftTimeLimitExceeded: do_something()`
 @app.task(bind=True, max_retries=4, soft_time_limit=5)
 def data_extractor(self):
     try:
@@ -58,6 +66,9 @@ def data_extractor(self):
         # the task wait more to be re executed.
         secs = backoff(self.request.retries)
         raise self.retry(exc=exc, countdown=secs)
+
+        # At the end if max_retries hit limit without success will raise the Exception `exc`
+        # In this case ValueError
 
 ########################################################
 # Simple periodic task

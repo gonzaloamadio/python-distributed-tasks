@@ -32,3 +32,11 @@ they can go and pick up from the secondary queue.
 
 
 ![priority](img/priority.png)
+
+
+# Deade letter queues
+
+What will your distributed messaging system do with a message it cannot deliver?
+
+A backend with a queue system probably has a lot of components.
+Or what happens if a service that consumes a message fails, how do we recover from that.
